@@ -1,16 +1,4 @@
-Name,Category,Price,Source 1,Source 2
-Shanghai Sharks,Sports,0,http://www.chinahush.com/2009/07/15/yao-ming-bought-his-former-club-shanghai-sharks/,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
-,,0,,
+name,category,price,source1,source2
 Paperclip,Consumer Goods,0.0057,http://www.amazon.com/ACCO-Paper-Economy-Smooth-72580/dp/B00006IBK8/ref=sr_1_1?ie=UTF8&qid=1456614697&sr=8-1&keywords=paperclip,
 McDonald's Big Mac,Consumer Goods,3.99,http://secretmenus.com/mcdonalds/full-menu/,
 One lb of Jellybelly jellybean,Consumer Goods,8.99,,
