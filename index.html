@@ -7,7 +7,7 @@
             margin-top: 0px;
             margin-left: 0px;
             margin-right: 0px;
-            border: 1px solid rgba(0, 0, 0, .2);
+            /*border: 1px solid rgba(0, 0, 0, .2);*/
         }
         #xaxis .domain {
             fill:none;
@@ -32,11 +32,6 @@
         .axis text {
             fill: #323232;
         }
-/*        #wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-        }*/
     </style>
 </head>
 <body>
@@ -50,33 +45,10 @@
         d3.csv("data.csv", function(data) {
             // console.log(data);
 
-            var max = 0;
-
-            var partitionMax = 1000;
-            var partition = 0;
-            var i = 0;
-            var partitions = new Array();
-
-            partitions.push(new Array());
-
-            while (partitionMax < 20000000000000) {
-                if (data[i].price <= partitionMax) {
-                    partitions[partition].push(data[i]);
-                }
-                else {
-                    partionMax = partitionMax * 1000;
-                    partitions.push(new Array());
-                    partition++;
-                }
-                i++;
-            }
-
-            console.log(partitions);
-
-            function drawGraph() {
+            function drawGraph(data, xmax) {
 
                 var width = window.innerWidth;
-                var height = 2000;
+                var height = data.length * 30;
 
                 var canvas = d3.select('#wrapper')
                 .append('svg')
@@ -84,15 +56,14 @@
 
                 var paddingLeft = 500;
                 var paddingRight = 100;
-                var paddingTop = 100;
-                var paddingBottom = 100;
+                var paddingTop = 10;
+                var paddingBottom = 50;
 
                 var colors = ['#0000b4','#0082ca','#0094ff','#0d4bcf','#0066AE','#074285','#00187B','#285964','#405F83','#416545','#4D7069','#6E9985','#7EBC89','#0283AF','#79BCBF','#99C19E'];
 
-                var tickVals = [0, 19000000000000];
+                var tickVals = [0, xmax];
 
                 var xmin = 0;
-                var xmax = 19000000000000;
 
                 var xscale = d3.scale.linear()
                 .domain([xmin, xmax])
@@ -121,11 +92,11 @@
                 .tickValues(d3.range(data.length));
 
                 canvas.append("g")
-                .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom / 1.25) + ")")
+                .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + 20) + ")")
                 .attr("class", "x axis").call(xAxis);
 
                 canvas.append("g")
-                .attr("transform", "translate(" + paddingLeft / 1.1 + ",0)")
+                .attr("transform", "translate(" + (paddingLeft - 10) + ",0)")
                 .attr("class", "axis").call(yAxis);
 
                 var chart = canvas
@@ -149,7 +120,33 @@
                 .style('fill','black');
 
 
+
             }
+
+            var scales = [1000, 100000, 100000000, 100000000000,  19000000000000]
+            var cur = 0;
+            var i = 0;
+            var partitions = new Array();
+
+            partitions.push(new Array());
+
+            data.forEach(function(point) {
+                console.log(scales[cur]);
+                if (point.price <= scales[cur]) {
+                    partitions[i].push(point);
+                    console.log(partitions[i]);
+                }
+                else {
+                    drawGraph(partitions[i].reverse(),scales[cur]);
+                    i++;
+                    partitions.push(new Array());
+                    partitions[i].push(point);
+                    cur++;
+                }
+            });
+            drawGraph(partitions[i].reverse(),scales[cur]);
+
+            console.log(partitions);
         });
 
     </script>
