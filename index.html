@@ -59,7 +59,7 @@
                 var paddingTop = 10;
                 var paddingBottom = 50;
 
-                var colors = ['#0000b4','#0082ca','#0094ff','#0d4bcf','#0066AE','#074285','#00187B','#285964','#405F83','#416545','#4D7069','#6E9985','#7EBC89','#0283AF','#79BCBF','#99C19E'];
+                var colors = ['#FFB44C', '#FF9300', '#CC7600'];
 
                 var tickVals = [0, xmax];
 
@@ -117,7 +117,12 @@
                         return yscale(i) - 10;
                     }
                 })
-                .style('fill','black');
+                .style({
+                    'fill': function() {
+                        var i = Math.floor(Math.random() * colors.length);
+                        return colors[i];
+                    }
+                });
 
 
 
