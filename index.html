@@ -50,9 +50,8 @@
         d3.csv("data.csv", function(data) {
             console.log(data);
 
-
             var width = 900;
-            var height = 800;
+            var height = 2000;
 
             var canvas = d3.select('#wrapper')
             .append('svg')
@@ -60,7 +59,7 @@
 
             var padding = 200;
 
-            var scrollPos = window.scrollY;
+            // var scrollPos = window.scrollY;
 
             // var categories= [
             // 'Accessories', 'Audiophile', 'Camera & Photo', 'Cell Phones', 'Computers','eBook Readers','Gadgets','GPS & Navigation','Home Audio','Office Electronics','Portable Audio','Portable Video','Security & Surveillance','Service','Television & Video','Car & Vehicle','test'
@@ -74,13 +73,13 @@
 
             var colors = ['#0000b4','#0082ca','#0094ff','#0d4bcf','#0066AE','#074285','#00187B','#285964','#405F83','#416545','#4D7069','#6E9985','#7EBC89','#0283AF','#79BCBF','#99C19E'];
 
-            var tickVals = [0, 10, 100, 1000, 10000];
+            var tickVals = [0, 20000000000000];
 
-            var xmin = 10;
-            var xmax = 10000;
+            var xmin = 0;
+            var xmax = 20000000000000;
 
             var xscale = d3.scale.linear()
-            .domain([0, xmin])
+            .domain([xmin, xmax])
             .range([padding, width - padding]);
 
             var yscale = d3.scale.linear()
@@ -91,12 +90,10 @@
             .domain([0,data.length - 1])
             .range(colors);
 
-
             var xAxis = d3.svg.axis();
             xAxis
             .orient('bottom')
-            .scale(xscale)
-            .tickValues(tickVals);
+            .scale(xscale).tickValues(tickVals);
 
             var yAxis = d3.svg.axis();
             yAxis
@@ -108,7 +105,7 @@
             .tickValues(d3.range(data.length));
 
             canvas.append("g")
-            .attr("transform", "translate(0," + (height - padding / 1.25) + ")")
+            .attr("transform", "translate(" + 0 +"," + (height - padding / 1.25) + ")")
             .attr("class", "x axis").call(xAxis);
 
             canvas.append("g")
@@ -124,12 +121,18 @@
             .attr('height', 20)
             .attr({
                 'x': padding,
-                'y': function(d) {
-                    console.log(d);
-                    return yscale(d.price) - 10;
+                'width': function(d) {
+                    console.log(parseFloat(d.price));
+                    console.log("Scaled:" + xscale(parseFloat(d.price)));
+                    return xscale(parseFloat(d.price));
+                },
+                'y': function(d,i) {
+                    return yscale(i) - 10;
                 }
             })
-            .style('fill',function(d,i){ return colorScale(i); });
+            // .style('fill',function(d,i){ return colorScale(i); });
+            .style('fill','black');
+            // .attr('width', 10);
 
             // var chart = canvas.append('g')
             // .attr('id','bars')
