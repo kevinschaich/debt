@@ -164,6 +164,18 @@
                         return colors[i];
                     }
                 });
+
+                tickVals.forEach(function(x) {
+                    canvas.append('rect')
+                    .attr({
+                        'x': xscale(parseFloat(x)) + paddingLeft,
+                        'width': 5,
+                        'y': 0,
+                        'height': height
+                    })
+                    .style('fill', 'white')
+                });
+
                 cur_height += height + graphSpacing;
             }
 
