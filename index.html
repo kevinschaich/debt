@@ -193,21 +193,26 @@
 
             var baryMidpoint = BarHeight/2;
 
-            xCurveScaling = d3.scale.linear()
+            var xCurveScaling = d3.scale.linear()
                 .domain([0,400])
                 .range([paddingLeft, width - paddingRight]);
+
+            var widthScaling = d3.scale.linear()
+                .domain([0,400])
+                .range([8,20]);
 
             for (var i=0;i<pathinfo.length-1;i++){
                 var y1 = pathinfo[i]+baryMidpoint;
                 var y2 = pathinfo[i+1]+baryMidpoint;
                 var midy = (y1+y2)/2;
-                var midx = xCurveScaling(midy - Math.min(y1,y2));
+                var scalingFactor = midy - Math.min(y1,y2);
+                var midx = xCurveScaling(scalingFactor);
                 console.log("{0}: {1},{2}".format(d,y1,y2));
                 var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
 
                 canvas.append("svg:path")
                 .attr("d",path)
-                .style("stroke-width", 10)
+                .style("stroke-width", widthScaling(scalingFactor))
                 .style("stroke", "grey")
                 .style("fill", "none")  
                 .style("opacity","0.5");            
