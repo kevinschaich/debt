@@ -12,6 +12,7 @@
         .x.axis {
             font-size: 8pt;
             fill: #323232;
+            border: 1px solid #323232;
         }
         .axis path {
             fill: none;
@@ -49,6 +50,15 @@
             var paddingTop = BarSpacing;
             var paddingBottom = BarSpacing;
             var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
+            var colors = ['hsl(0, 100%, 70%)', 'hsl(15, 100%, 70%)', 'hsl(30, 100%, 70%)', 'hsl(45, 100%, 70%)', 'hsl(60, 100%, 70%)', 'hsl(75, 100%, 70%)', 'hsl(90, 100%, 70%)', 'hsl(105, 100%, 70%)', 'hsl(120, 100%, 70%)', 'hsl(135, 100%, 70%)', 'hsl(150, 100%, 70%)', 'hsl(165, 100%, 70%)', 'hsl(180, 100%, 70%)', 'hsl(195, 100%, 70%)', 'hsl(210, 100%, 70%)', 'hsl(225, 100%, 70%)', 'hsl(240, 100%, 70%)', 'hsl(255, 100%, 70%)', 'hsl(270, 100%, 70%)', 'hsl(285, 100%, 70%)', 'hsl(300, 100%, 70%)', 'hsl(315, 100%, 70%)', 'hsl(330, 100%, 70%)', 'hsl(345, 100%, 70%)', 'hsl(359, 100%, 70%)', 'hsl(0, 100%, 70%)'];
+
+            var categories = [];
+            for (var i = 0; i < data.length; i++) {
+                if (categories.indexOf(data[i]['category']) === -1)
+                    categories.push(data[i]['category']);
+            }
+            console.log(categories.length);
+            console.log(colors.length);
 
             var graphSpacing = BarHeight * 2;
 
@@ -67,8 +77,6 @@
                 .select('#main')
                 .append("g")
                 .attr("transform", "translate(0," + cur_height + ")");
-
-                var colors = ['#FFB44C', '#FF9300', '#CC7600'];
 
                 var tickVals = [0];
 
@@ -106,7 +114,11 @@
                         .replace('T', ' trillion');
                     }
                     else {
-                        return formatValue(d);
+                        return formatValue(d)
+                        .replace('k', ' k')
+                        .replace('M', ' M')
+                        .replace('G', ' B')
+                        .replace('T', ' T');
                     }
                 });
 
@@ -147,8 +159,8 @@
                     }
                 })
                 .style({
-                    'fill': function() {
-                        var i = Math.floor(Math.random() * colors.length);
+                    'fill': function(d, i) {
+                        var i = categories.indexOf(data[i]['category']) * 3;
                         return colors[i];
                     }
                 });
