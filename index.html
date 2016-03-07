@@ -3,34 +3,18 @@
 <head>
     <title>3300 - P1</title>
     <style>
-        svg {
-            margin-top: 0px;
-            margin-left: 0px;
-            margin-right: 0px;
-            /*border: 1px solid rgba(0, 0, 0, .2);*/
-        }
         #xaxis .domain {
             fill:none;
-            stroke:#000;
-        }
-        #xaxis text, #yaxis text {
-            font-size: 14px;
         }
         body {
             font-family: Roboto;
         }
-        #padding {
-            /*margin-bottom: 5000px;*/
+        .x.axis {
+            font-size: 8pt;
+            fill: #323232;
         }
         .axis path {
             fill: none;
-            stroke: #323232;
-        }
-        .axis line {
-            stroke: #323232;
-        }
-        .axis text {
-            fill: #323232;
         }
     </style>
     <script>
@@ -65,7 +49,6 @@
             var paddingTop = BarSpacing;
             var paddingBottom = BarSpacing;
             var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
-            var scaleNames = ['thousand', 'million', 'billion', 'trillion',  'trillion'];
 
             var graphSpacing = BarHeight * 2;
 
@@ -86,21 +69,47 @@
                 .attr("transform", "translate(0," + cur_height + ")");
 
                 var colors = ['#FFB44C', '#FF9300', '#CC7600'];
-                var tickVals = [0, xmax];
+
+                var tickVals = [0];
+
+                for (var i = 0; i <= 10; i++) {
+                    tickVals.push((xmax / 10) * i);
+                }
+
                 var xmin = 0;
+
                 var xscale = d3.scale.linear()
                 .domain([xmin, xmax])
                 .range([0, width - (paddingLeft + paddingRight)]);
+
                 var yscale = d3.scale.linear()
                 .domain([0,data.length - 1])
                 .range([height - paddingBottom, paddingTop]);
+
                 var colorScale = d3.scale.quantize()
                 .domain([0,data.length - 1])
                 .range(colors);
+
+                var formatValue = d3.format("$s");
+
                 var xAxis = d3.svg.axis();
                 xAxis
                 .orient('bottom')
-                .scale(xscale).tickValues(tickVals);
+                .scale(xscale)
+                .tickValues(tickVals)
+                .tickFormat(function(d) {
+                    if (width > 1600) {
+                        return formatValue(d)
+                        .replace('k', ' thousand')
+                        .replace('M', ' million')
+                        .replace('G', ' billion')
+                        .replace('T', ' trillion');
+                    }
+                    else {
+                        return formatValue(d);
+                    }
+                });
+
                 var yAxis = d3.svg.axis();
                 yAxis
                 .orient('left')
@@ -109,14 +118,15 @@
                     return data[i].name;
                 })
                 .tickValues(d3.range(data.length));
+
                 canvas.append("g")
                 .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + BarHeight) + ")")
                 .attr("class", "x axis").call(xAxis);
+
                 canvas.append("g")
                 .attr("transform", "translate(" + (paddingLeft - 10) + ",0)")
                 .attr("class", "y axis").call(yAxis);
-                d3.selectAll(".y line, .y path, .y text").style("stroke","none").attr("font-size", "11px").attr("font-family", "Calibri");
-                d3.selectAll(".x text").attr("font-size", "11px").attr("font-family", "Calibri")
+
                 var chart = canvas
                 .selectAll('rect')
                 .data(data)
@@ -130,8 +140,6 @@
                 .attr({
                     'x': paddingLeft,
                     'width': function(d) {
-                        //console.log(parseFloat(d.price));
-                        //console.log("Scaled:" + xscale(parseFloat(d.price)));
                         return xscale(parseFloat(d.price));
                     },
                     'y': function(d,i) {
