@@ -33,6 +33,21 @@
             fill: #323232;
         }
     </style>
+    <script>
+            // First, checks if it isn't implemented yet.
+        if (!String.prototype.format) {
+          String.prototype.format = function() {
+            var args = arguments;
+            return this.replace(/{(\d+)}/g, function(match, number) { 
+              return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+              ;
+            });
+          };
+        }
+    </script>
+
 </head>
 <body>
     <div id="wrapper">
@@ -42,15 +57,31 @@
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
         d3.csv("data2.csv", function(data) {
-            // console.log(data);
+
+            var BarHeight = 20;
+            var paddingLeft = 250;
+            var paddingRight = 250;
+            var paddingTop = 10;
+            var paddingBottom = 50;
+            var width = window.innerWidth;
+            var height = data.length * 30;
+            var canvas = d3.select('#wrapper')
+            .append('svg')
+            .attr("id","main")
+            .attr({'width': width,'height': height});
+
+            var cur_height = 0;
+
             function drawGraph(data, xmax) {
                 var width = window.innerWidth;
                 var height = data.length * 30;
                 var canvas = d3.select('#wrapper')
-                .append('svg')
-                .attr({'width': width,'height': height});
-                var paddingLeft = 150;
-                var paddingRight = 100;
+                .select('#main')
+                .append("g")
+                .attr("transform", "translate(0," + cur_height + ")");
+
+                var paddingLeft = 250;
+                var paddingRight = 250;
                 var paddingTop = 10;
                 var paddingBottom = 50;
                 var colors = ['#FFB44C', '#FF9300', '#CC7600'];
@@ -90,13 +121,16 @@
                 .data(data)
                 .enter()
                 .append('rect')
+                .datum(function (d){
+                    d["height_offset"] = cur_height;
+                    return d; })
                 .attr('id','bars')
-                .attr('height', 20)
+                .attr('height', BarHeight)
                 .attr({
                     'x': paddingLeft,
                     'width': function(d) {
-                        console.log(parseFloat(d.price));
-                        console.log("Scaled:" + xscale(parseFloat(d.price)));
+                        //console.log(parseFloat(d.price));
+                        //console.log("Scaled:" + xscale(parseFloat(d.price)));
                         return xscale(parseFloat(d.price));
                     },
                     'y': function(d,i) {
@@ -109,18 +143,19 @@
                         return colors[i];
                     }
                 });
+                cur_height+=height;
             }
 
-            var scales = [1000, 100000, 100000000, 100000000000,  19000000000000]
+            var scales = [1000,1000000, 1000000000000,  19000000000000]
             var cur = 0;
             var i = 0;
             var partitions = new Array();
             partitions.push(new Array());
             data.forEach(function(point) {
-                console.log(scales[cur]);
+                // console.log(scales[cur]);
                 if (point.price <= scales[cur]) {
                     partitions[i].push(point);
-                    console.log(partitions[i]);
+                    // console.log(partitions[i]);
                 }
                 else {
                     drawGraph(partitions[i].reverse(),scales[cur]);
@@ -131,8 +166,54 @@
                 }
             });
             drawGraph(partitions[i].reverse(),scales[cur]);
-            console.log(partitions);
+            // console.log(partitions);
+
+        var linkingGroups = {};
+
+        var bars = d3.selectAll('#bars');
+        bars.each(function(i) {
+            if (i['Linking']){
+                var offset_h = parseFloat(i["height_offset"]);
+                var y = parseFloat(d3.select(this).attr("y"));
+                if (linkingGroups[i['Linking']]){
+                    linkingGroups[i['Linking']].unshift(offset_h+y);
+                }
+                else{
+                    linkingGroups[i['Linking']] = [offset_h+y];
+                }
+            }
         });
+
+        // draw a curve path for each linking
+        Object.keys(linkingGroups).forEach(function (d,i){
+            pathinfo = [];
+            linkingGroups[d].forEach(function (val,i){
+                console.log(val);
+                pathinfo.push(val);
+            });
+
+            var baryMidpoint = BarHeight/2;
+
+            xCurveScaling = d3.scale.linear()
+                .domain([0,400])
+                .range([paddingLeft, width - paddingRight]);
+
+            for (var i=0;i<pathinfo.length-1;i++){
+                var y1 = pathinfo[i]+baryMidpoint;
+                var y2 = pathinfo[i+1]+baryMidpoint;
+                var midy = (y1+y2)/2;
+                var midx = xCurveScaling(midy - y1);
+                var path = "M 250 {0} Q {2} {3} 250 {1}".format(y1,y2,midx,midy);
+
+                canvas.append("svg:path")
+                .attr("d",path)
+                .style("stroke-width", 10)
+                .style("stroke", "grey")
+                .style("fill", "none")  
+                .style("opacity","0.5");            
+            };
+        });
+    });
     </script>
 </body>
 </html>
