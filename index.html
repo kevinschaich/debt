@@ -52,6 +52,9 @@
             var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
             var colors = ['hsl(0, 100%, 70%)', 'hsl(15, 100%, 70%)', 'hsl(30, 100%, 70%)', 'hsl(45, 100%, 70%)', 'hsl(60, 100%, 70%)', 'hsl(75, 100%, 70%)', 'hsl(90, 100%, 70%)', 'hsl(105, 100%, 70%)', 'hsl(120, 100%, 70%)', 'hsl(135, 100%, 70%)', 'hsl(150, 100%, 70%)', 'hsl(165, 100%, 70%)', 'hsl(180, 100%, 70%)', 'hsl(195, 100%, 70%)', 'hsl(210, 100%, 70%)', 'hsl(225, 100%, 70%)', 'hsl(240, 100%, 70%)', 'hsl(255, 100%, 70%)', 'hsl(270, 100%, 70%)', 'hsl(285, 100%, 70%)', 'hsl(300, 100%, 70%)', 'hsl(315, 100%, 70%)', 'hsl(330, 100%, 70%)', 'hsl(345, 100%, 70%)', 'hsl(359, 100%, 70%)', 'hsl(0, 100%, 70%)'];
 
+            var titleOffset = -10;
+            var subtitleOffset = 10;
+
             var categories = [];
             for (var i = 0; i < data.length; i++) {
                 if (categories.indexOf(data[i]['category']) === -1)
@@ -131,13 +134,27 @@
                 })
                 .tickValues(d3.range(data.length));
 
+                var subyAxis = d3.svg.axis();
+                subyAxis
+                .orient('left')
+                .scale(yscale)
+                .tickFormat(function(d,i){
+                    try {
+                        return data[i].Subtitle;
+                    } catch(e) {}
+                });
+
                 canvas.append("g")
                 .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + BarHeight) + ")")
                 .attr("class", "x axis").call(xAxis);
 
                 canvas.append("g")
-                .attr("transform", "translate(" + (paddingLeft - 10) + ",0)")
+                .attr("transform", "translate(" + (paddingLeft - 10) + ","+titleOffset+")")
                 .attr("class", "y axis").call(yAxis);
+
+                canvas.append("g")
+                .attr("transform", "translate(" + (paddingLeft - 10) + ","+subtitleOffset+")")
+                .attr("class", "y axis").call(subyAxis);
 
                 var chart = canvas
                 .selectAll('rect')
