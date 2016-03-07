@@ -109,7 +109,7 @@
                 })
                 .tickValues(d3.range(data.length));
                 canvas.append("g")
-                .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + 20) + ")")
+                .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + BarHeight) + ")")
                 .attr("class", "x axis").call(xAxis);
                 canvas.append("g")
                 .attr("transform", "translate(" + (paddingLeft - 10) + ",0)")
@@ -146,7 +146,7 @@
                 cur_height+=height;
             }
 
-            var scales = [1000,1000000, 1000000000000,  19000000000000]
+            var scales = [1000,1000000, 100000000, 1000000000000,  19000000000000]
             var cur = 0;
             var i = 0;
             var partitions = new Array();
@@ -188,7 +188,6 @@
         Object.keys(linkingGroups).forEach(function (d,i){
             pathinfo = [];
             linkingGroups[d].forEach(function (val,i){
-                console.log(val);
                 pathinfo.push(val);
             });
 
@@ -202,8 +201,8 @@
                 var y1 = pathinfo[i]+baryMidpoint;
                 var y2 = pathinfo[i+1]+baryMidpoint;
                 var midy = (y1+y2)/2;
-                var midx = xCurveScaling(midy - y1);
-                // var path = "M 250 {0} Q {2} {3} 250 {1}".format(y1,y2,midx,midy);
+                var midx = xCurveScaling(midy - Math.min(y1,y2));
+                console.log("{0}: {1},{2}".format(d,y1,y2));
                 var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
 
                 canvas.append("svg:path")
