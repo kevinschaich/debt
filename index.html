@@ -64,11 +64,13 @@
             var paddingRight = paddingLeft;
             var paddingTop = BarSpacing;
             var paddingBottom = BarSpacing;
+            var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
+            var scaleNames = ['thousand', 'million', 'billion', 'trillion',  'trillion'];
 
             var graphSpacing = BarHeight * 2;
 
             var width = window.innerWidth;
-            var height = data.length * (BarHeight + BarSpacing);
+            var height = data.length * (BarHeight + BarSpacing) + (graphSpacing * scales.length);
             var canvas = d3.select('#wrapper')
             .append('svg')
             .attr("id","main")
@@ -145,7 +147,6 @@
                 cur_height += height + graphSpacing;
             }
 
-            var scales = [1000, 1000000, 1000000000, 1000000000000,  19000000000000];
             var cur = 0;
             var i = 0;
             var partitions = new Array();
@@ -163,7 +164,6 @@
                 }
             });
             drawGraph(partitions[i].reverse(),scales[cur]);
-            // console.log(partitions);
 
             var linkingGroups = {};
 
