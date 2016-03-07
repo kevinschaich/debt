@@ -41,47 +41,34 @@
     </div>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
-
         d3.csv("data.csv", function(data) {
             // console.log(data);
-
             function drawGraph(data, xmax) {
-
                 var width = window.innerWidth;
                 var height = data.length * 30;
-
                 var canvas = d3.select('#wrapper')
                 .append('svg')
                 .attr({'width': width,'height': height});
-
                 var paddingLeft = 500;
                 var paddingRight = 100;
                 var paddingTop = 10;
                 var paddingBottom = 50;
-
                 var colors = ['#FFB44C', '#FF9300', '#CC7600'];
-
                 var tickVals = [0, xmax];
-
                 var xmin = 0;
-
                 var xscale = d3.scale.linear()
                 .domain([xmin, xmax])
                 .range([0, width - (paddingLeft + paddingRight)]);
-
                 var yscale = d3.scale.linear()
                 .domain([0,data.length - 1])
                 .range([height - paddingBottom, paddingTop]);
-
                 var colorScale = d3.scale.quantize()
                 .domain([0,data.length - 1])
                 .range(colors);
-
                 var xAxis = d3.svg.axis();
                 xAxis
                 .orient('bottom')
                 .scale(xscale).tickValues(tickVals);
-
                 var yAxis = d3.svg.axis();
                 yAxis
                 .orient('left')
@@ -90,15 +77,14 @@
                     return data[i].name;
                 })
                 .tickValues(d3.range(data.length));
-
                 canvas.append("g")
                 .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + 20) + ")")
                 .attr("class", "x axis").call(xAxis);
-
                 canvas.append("g")
                 .attr("transform", "translate(" + (paddingLeft - 10) + ",0)")
-                .attr("class", "axis").call(yAxis);
-
+                .attr("class", "y axis").call(yAxis);
+                d3.selectAll(".y line, .y path, .y text").style("stroke","none").attr("font-size", "11px").attr("font-family", "Calibri");
+                d3.selectAll(".x text").attr("font-size", "11px").attr("font-family", "Calibri")
                 var chart = canvas
                 .selectAll('rect')
                 .data(data)
@@ -123,18 +109,12 @@
                         return colors[i];
                     }
                 });
-
-
-
             }
-
             var scales = [1000, 100000, 100000000, 100000000000,  19000000000000]
             var cur = 0;
             var i = 0;
             var partitions = new Array();
-
             partitions.push(new Array());
-
             data.forEach(function(point) {
                 console.log(scales[cur]);
                 if (point.price <= scales[cur]) {
@@ -150,10 +130,8 @@
                 }
             });
             drawGraph(partitions[i].reverse(),scales[cur]);
-
             console.log(partitions);
         });
-
     </script>
 </body>
 </html>
