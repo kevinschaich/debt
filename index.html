@@ -14,7 +14,7 @@
             stroke:#000;
         }
         #xaxis text, #yaxis text {
-            font-size: 12px;
+            font-size: 14px;
         }
         body {
             font-family: Roboto;
@@ -35,16 +35,16 @@
     </style>
     <script>
             // First, checks if it isn't implemented yet.
-        if (!String.prototype.format) {
-          String.prototype.format = function() {
-            var args = arguments;
-            return this.replace(/{(\d+)}/g, function(match, number) { 
-              return typeof args[number] != 'undefined'
-                ? args[number]
-                : match
-              ;
-            });
-          };
+            if (!String.prototype.format) {
+              String.prototype.format = function() {
+                var args = arguments;
+                return this.replace(/{(\d+)}/g, function(match, number) {
+                  return typeof args[number] != 'undefined'
+                  ? args[number]
+                  : match
+                  ;
+              });
+            };
         }
     </script>
 
@@ -58,14 +58,17 @@
     <script>
         d3.csv("data2.csv", function(data) {
 
-            var BarHeight = 25;
-            var BarSpacing = 12;
+            var BarHeight = 40;
+            var BarSpacing = 20;
             var paddingLeft = 250;
-            var paddingRight = 250;
-            var paddingTop = 10;
-            var paddingBottom = 50;
+            var paddingRight = paddingLeft;
+            var paddingTop = BarSpacing;
+            var paddingBottom = BarSpacing;
+
+            var graphSpacing = BarHeight * 2;
+
             var width = window.innerWidth;
-            var height = data.length * (BarHeight+BarSpacing)+100;
+            var height = data.length * (BarHeight + BarSpacing);
             var canvas = d3.select('#wrapper')
             .append('svg')
             .attr("id","main")
@@ -74,17 +77,12 @@
             var cur_height = 0;
 
             function drawGraph(data, xmax) {
-                var width = window.innerWidth;
-                var height = data.length * (BarHeight+BarSpacing);
+                var height = data.length * (BarHeight + BarSpacing);
                 var canvas = d3.select('#wrapper')
                 .select('#main')
                 .append("g")
                 .attr("transform", "translate(0," + cur_height + ")");
 
-                var paddingLeft = 250;
-                var paddingRight = 250;
-                var paddingTop = 10;
-                var paddingBottom = 50;
                 var colors = ['#FFB44C', '#FF9300', '#CC7600'];
                 var tickVals = [0, xmax];
                 var xmin = 0;
@@ -135,7 +133,7 @@
                         return xscale(parseFloat(d.price));
                     },
                     'y': function(d,i) {
-                        return yscale(i) - 10;
+                        return yscale(i) - (BarHeight / 2);
                     }
                 })
                 .style({
@@ -144,19 +142,17 @@
                         return colors[i];
                     }
                 });
-                cur_height+=height;
+                cur_height += height + graphSpacing;
             }
 
-            var scales = [1000,1000000, 100000000, 1000000000, 1000000000000,  19000000000000];
+            var scales = [1000, 1000000, 1000000000, 1000000000000,  19000000000000];
             var cur = 0;
             var i = 0;
             var partitions = new Array();
             partitions.push(new Array());
             data.forEach(function(point) {
-                // console.log(scales[cur]);
                 if (point.price <= scales[cur]) {
                     partitions[i].push(point);
-                    // console.log(partitions[i]);
                 }
                 else {
                     drawGraph(partitions[i].reverse(),scales[cur]);
@@ -169,21 +165,23 @@
             drawGraph(partitions[i].reverse(),scales[cur]);
             // console.log(partitions);
 
-        var linkingGroups = {};
+            var linkingGroups = {};
 
-        var bars = d3.selectAll('#bars');
-        bars.each(function(i) {
-            if (i['Linking']){
-                var offset_h = parseFloat(i["height_offset"]);
-                var y = parseFloat(d3.select(this).attr("y"));
-                if (linkingGroups[i['Linking']]){
-                    linkingGroups[i['Linking']].unshift(offset_h+y);
+            var bars = d3.selectAll('#bars');
+            bars.each(function(i) {
+                if (i['Linking']){
+                    var offset_h = parseFloat(i["height_offset"]);
+                    var y = parseFloat(d3.select(this).attr("y"));
+                    if (linkingGroups[i['Linking']]){
+                        linkingGroups[i['Linking']].unshift(offset_h+y);
+                    }
+                    else{
+                        linkingGroups[i['Linking']] = [offset_h+y];
+                    }
                 }
-                else{
-                    linkingGroups[i['Linking']] = [offset_h+y];
-                }
-            }
-        });
+            });
+
+            var curveMax = 800;
 
         // draw a curve path for each linking
         Object.keys(linkingGroups).forEach(function (d,i){
@@ -195,12 +193,12 @@
             var baryMidpoint = BarHeight/2;
 
             var xCurveScaling = d3.scale.linear()
-                .domain([0,400])
-                .range([paddingLeft, width - paddingRight]);
+            .domain([0, curveMax])
+            .range([paddingLeft, width - paddingRight]);
 
             var widthScaling = d3.scale.linear()
-                .domain([0,400])
-                .range([8,20]);
+            .domain([0, curveMax])
+            .range([8,20]);
 
             for (var i=0;i<pathinfo.length-1;i++){
                 var y1 = pathinfo[i]+baryMidpoint;
@@ -214,11 +212,11 @@
                 .attr("d",path)
                 .style("stroke-width", widthScaling(scalingFactor))
                 .style("stroke", "grey")
-                .style("fill", "none")  
-                .style("opacity","0.5");            
+                .style("fill", "none")
+                .style("opacity","0.5");
             };
         });
     });
-    </script>
+</script>
 </body>
 </html>
