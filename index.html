@@ -203,7 +203,8 @@
                 var y2 = pathinfo[i+1]+baryMidpoint;
                 var midy = (y1+y2)/2;
                 var midx = xCurveScaling(midy - y1);
-                var path = "M 250 {0} Q {2} {3} 250 {1}".format(y1,y2,midx,midy);
+                // var path = "M 250 {0} Q {2} {3} 250 {1}".format(y1,y2,midx,midy);
+                var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
 
                 canvas.append("svg:path")
                 .attr("d",path)
