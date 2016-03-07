@@ -52,7 +52,7 @@
             var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
             var colors = ['hsl(0, 100%, 70%)', 'hsl(15, 100%, 70%)', 'hsl(30, 100%, 70%)', 'hsl(45, 100%, 70%)', 'hsl(60, 100%, 70%)', 'hsl(75, 100%, 70%)', 'hsl(90, 100%, 70%)', 'hsl(105, 100%, 70%)', 'hsl(120, 100%, 70%)', 'hsl(135, 100%, 70%)', 'hsl(150, 100%, 70%)', 'hsl(165, 100%, 70%)', 'hsl(180, 100%, 70%)', 'hsl(195, 100%, 70%)', 'hsl(210, 100%, 70%)', 'hsl(225, 100%, 70%)', 'hsl(240, 100%, 70%)', 'hsl(255, 100%, 70%)', 'hsl(270, 100%, 70%)', 'hsl(285, 100%, 70%)', 'hsl(300, 100%, 70%)', 'hsl(315, 100%, 70%)', 'hsl(330, 100%, 70%)', 'hsl(345, 100%, 70%)', 'hsl(359, 100%, 70%)', 'hsl(0, 100%, 70%)'];
 
-            var titleOffset = -10;
+            var titleOffset = 0;
             var subtitleOffset = 10;
 
             var categories = [];
@@ -255,7 +255,7 @@
                 var midy = (y1+y2)/2;
                 var scalingFactor = midy - Math.min(y1,y2);
                 var midx = xCurveScaling(scalingFactor);
-                var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
+                var path = "M 255 {0} C {2} {0} {2} {1} 255 {1}".format(y1,y2,midx);
 
                 canvas.append("svg:path")
                 .attr("d",path)
