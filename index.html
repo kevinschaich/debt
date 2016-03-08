@@ -18,6 +18,8 @@
             fill: none;
         }
     </style>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
             // First, checks if it isn't implemented yet.
             if (!String.prototype.format) {
@@ -39,42 +41,57 @@
     </div>
     <div id="padding">
     </div>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
         d3.csv("data2.csv", function(data) {
 
+            ////////////////////////////////////////////////////////////////////
+            // CONSTANTS ///////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+            // bars
             var BarHeight = 40;
             var BarSpacing = 20;
+
+            // padding / spacing
             var paddingLeft = 250;
             var paddingRight = paddingLeft;
             var paddingTop = BarSpacing;
             var paddingBottom = BarSpacing;
-            var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
-            var colors = ['hsl(0, 100%, 70%)', 'hsl(15, 100%, 70%)', 'hsl(30, 100%, 70%)', 'hsl(45, 100%, 70%)', 'hsl(60, 100%, 70%)', 'hsl(75, 100%, 70%)', 'hsl(90, 100%, 70%)', 'hsl(105, 100%, 70%)', 'hsl(120, 100%, 70%)', 'hsl(135, 100%, 70%)', 'hsl(150, 100%, 70%)', 'hsl(165, 100%, 70%)', 'hsl(180, 100%, 70%)', 'hsl(195, 100%, 70%)', 'hsl(210, 100%, 70%)', 'hsl(225, 100%, 70%)', 'hsl(240, 100%, 70%)', 'hsl(255, 100%, 70%)', 'hsl(270, 100%, 70%)', 'hsl(285, 100%, 70%)', 'hsl(300, 100%, 70%)', 'hsl(315, 100%, 70%)', 'hsl(330, 100%, 70%)', 'hsl(345, 100%, 70%)', 'hsl(359, 100%, 70%)', 'hsl(0, 100%, 70%)'];
+            var graphSpacing = BarHeight * 2;
 
+            // titles
             var titleOffset = 0;
             var subtitleOffset = 10;
 
+            // scales / colors
+            var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
+            var colors = ['#8748ED', '1F94E8', '#90F101', '#FF3969', '#FF6926', '#E862DB'];
             var categories = [];
             for (var i = 0; i < data.length; i++) {
                 if (categories.indexOf(data[i]['category']) === -1)
                     categories.push(data[i]['category']);
             }
-            console.log(categories.length);
-            console.log(colors.length);
 
-            var graphSpacing = BarHeight * 2;
-
+            // canvas geometry
             var width = window.innerWidth;
             var height = data.length * (BarHeight + BarSpacing) + (graphSpacing * scales.length);
+            var cur_height = 0;
             var canvas = d3.select('#wrapper')
             .append('svg')
             .attr("id","main")
             .attr({'width': width,'height': height});
 
-            var cur_height = 0;
+            ////////////////////////////////////////////////////////////////////
+            // DRAW INSETS /////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
 
             function drawGraph(data, xmax) {
+
+                ////////////////////////////////////////////////////////////////
+                // CONSTANTS ///////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////
+
+                var xmin = 0;
                 var height = data.length * (BarHeight + BarSpacing);
                 var canvas = d3.select('#wrapper')
                 .select('#main')
@@ -82,12 +99,13 @@
                 .attr("transform", "translate(0," + cur_height + ")");
 
                 var tickVals = [0];
-
                 for (var i = 0; i <= 10; i++) {
                     tickVals.push((xmax / 10) * i);
                 }
 
-                var xmin = 0;
+                ////////////////////////////////////////////////////////////////
+                // SCALES //////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////
 
                 var xscale = d3.scale.linear()
                 .domain([xmin, xmax])
@@ -97,12 +115,12 @@
                 .domain([0,data.length - 1])
                 .range([height - paddingBottom, paddingTop]);
 
-                var colorScale = d3.scale.quantize()
-                .domain([0,data.length - 1])
-                .range(colors);
+                ////////////////////////////////////////////////////////////////
+                // AXES ////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////
 
+                // X axis
                 var formatValue = d3.format("$s");
-
                 var xAxis = d3.svg.axis();
                 xAxis
                 .orient('bottom')
@@ -125,6 +143,7 @@
                     }
                 });
 
+                // Y axis
                 var yAxis = d3.svg.axis();
                 yAxis
                 .orient('left')
@@ -144,17 +163,20 @@
                     } catch(e) {}
                 });
 
+                // Create axes
                 canvas.append("g")
                 .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + BarHeight) + ")")
                 .attr("class", "x axis").call(xAxis);
-
                 canvas.append("g")
                 .attr("transform", "translate(" + (paddingLeft - 10) + ","+titleOffset+")")
                 .attr("class", "y axis").call(yAxis);
-
                 canvas.append("g")
                 .attr("transform", "translate(" + (paddingLeft - 10) + ","+subtitleOffset+")")
                 .attr("class", "y axis").call(subyAxis);
+
+                ////////////////////////////////////////////////////////////////
+                // BARS ////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////
 
                 var chart = canvas
                 .selectAll('rect')
@@ -177,10 +199,14 @@
                 })
                 .style({
                     'fill': function(d, i) {
-                        var i = categories.indexOf(data[i]['category']) * 3;
+                        var i = categories.indexOf(data[i]['category']);
                         return colors[i];
                     }
                 });
+
+                ////////////////////////////////////////////////////////////////
+                // SLICES //////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////
 
                 function slice(xmax, partitions,width){
                     for (var i = 1; i < partitions; i++){
@@ -194,19 +220,19 @@
                         .style('fill', 'white')
                     }
                 }
-
                 slice(xmax, 10, 2);
                 slice(xmax, 100, 0.5);
 
                 cur_height += height + graphSpacing;
             }
 
-            function heightScale(price,partitionSize){
-                return ((price/partitionSize) * BarHeight);
-            }
+            ////////////////////////////////////////////////////////////////////
+            // CREATE PARTITIONS ///////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
 
             var cur = 0;
             var i = 0;
+
             var partitions = new Array();
             partitions.push(new Array());
             data.forEach(function(point) {
@@ -223,8 +249,11 @@
             });
             drawGraph(partitions[i].reverse(),scales[cur]);
 
-            var linkingGroups = {};
+            ////////////////////////////////////////////////////////////////////
+            // CREATE LINKS ////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
 
+            var linkingGroups = {};
             var bars = d3.selectAll('#bars');
             bars.each(function(i) {
                 if (i['Linking']){
@@ -241,40 +270,40 @@
 
             var curveMax = 800;
 
-        // draw a curve path for each linking
-        Object.keys(linkingGroups).forEach(function (d,i){
-            pathinfo = [];
-            linkingGroups[d].forEach(function (val,i){
-                pathinfo.push(val);
+            // draw a curve path for each linking
+            Object.keys(linkingGroups).forEach(function (d,i){
+                pathinfo = [];
+                linkingGroups[d].forEach(function (val,i){
+                    pathinfo.push(val);
+                });
+
+                var baryMidpoint = BarHeight/2;
+
+                var xCurveScaling = d3.scale.linear()
+                .domain([0, curveMax])
+                .range([paddingLeft, width - paddingRight]);
+
+                var widthScaling = d3.scale.linear()
+                .domain([0, curveMax])
+                .range([8,30]);
+
+                for (var i=0;i<pathinfo.length-1;i++){
+                    var y1 = pathinfo[i]+baryMidpoint;
+                    var y2 = pathinfo[i+1]+baryMidpoint;
+                    var midy = (y1+y2)/2;
+                    var scalingFactor = midy - Math.min(y1,y2);
+                    var midx = xCurveScaling(scalingFactor);
+                    var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
+
+                    canvas.append("svg:path")
+                    .attr("d",path)
+                    .style("stroke-width", widthScaling(scalingFactor))
+                    .style("stroke", "grey")
+                    .style("fill", "none")
+                    .style("opacity","0.5");
+                };
             });
-
-            var baryMidpoint = BarHeight/2;
-
-            var xCurveScaling = d3.scale.linear()
-            .domain([0, curveMax])
-            .range([paddingLeft, width - paddingRight]);
-
-            var widthScaling = d3.scale.linear()
-            .domain([0, curveMax])
-            .range([8,30]);
-
-            for (var i=0;i<pathinfo.length-1;i++){
-                var y1 = pathinfo[i]+baryMidpoint;
-                var y2 = pathinfo[i+1]+baryMidpoint;
-                var midy = (y1+y2)/2;
-                var scalingFactor = midy - Math.min(y1,y2);
-                var midx = xCurveScaling(scalingFactor);
-                var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
-
-                canvas.append("svg:path")
-                .attr("d",path)
-                .style("stroke-width", widthScaling(scalingFactor))
-                .style("stroke", "grey")
-                .style("fill", "none")
-                .style("opacity","0.5");
-            };
         });
-    });
-</script>
+    </script>
 </body>
 </html>
