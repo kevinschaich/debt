@@ -196,6 +196,10 @@
                 cur_height += height + graphSpacing;
             }
 
+            function heightScale(price,partitionSize){
+                return ((price/partitionSize) * BarHeight);
+            }
+
             var cur = 0;
             var i = 0;
             var partitions = new Array();
@@ -255,7 +259,7 @@
                 var midy = (y1+y2)/2;
                 var scalingFactor = midy - Math.min(y1,y2);
                 var midx = xCurveScaling(scalingFactor);
-                var path = "M 255 {0} C {2} {0} {2} {1} 255 {1}".format(y1,y2,midx);
+                var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
 
                 canvas.append("svg:path")
                 .attr("d",path)
