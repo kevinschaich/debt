@@ -182,26 +182,21 @@
                     }
                 });
 
-                  function slice(xmax, partitions,width){
-                for (var i = 1; i < partitions; i++){
-                  //console.log(parseFloat(x) +  i* (parseFloat(x) /(5 *modCounter)));
-                  //i* (parseFloat(x)) /(10 *modCounter
+                function slice(xmax, partitions,width){
+                    for (var i = 1; i < partitions; i++){
+                        canvas.append('rect')
+                        .attr({
+                            'x': xscale((xmax/partitions) * i) + paddingLeft ,
+                            'width': width,
+                            'y': 0,
+                            'height': height
+                        })
+                        .style('fill', 'white')
+                    }
+                }
 
-                    {canvas.append('rect')
-                    .attr({
-                        'x': xscale((xmax/partitions) * i) + paddingLeft ,
-                        'width': width,
-                        'y': 0,
-                        'height': height
-                    })
-                    .style('fill', 'white')
-                  }
-
-                 }
-              }
-
-              slice(xmax, 10, 5);
-              slice(xmax, 100, 0.3);
+                slice(xmax, 10, 2);
+                slice(xmax, 100, 0.5);
 
                 cur_height += height + graphSpacing;
             }
