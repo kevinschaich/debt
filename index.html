@@ -448,7 +448,16 @@
                     var minprice = Math.min(priceinfo[i+1],priceinfo[i]);
                     var maxprice = Math.min(priceinfo[i+1],priceinfo[i]);
 
-                    var proportion = Math.trunc(pricediff/minprice * 100);
+                    function roundUp(x){
+                        var y = Math.pow(10, x.toString().length-1);
+
+                        x = (x/y);
+                        x = Math.ceil(x);
+                        x = x*y;
+                        return x;
+                    }
+
+                    var proportion = roundUp(Math.trunc(pricediff/minprice * 100));
 
                     var textProportion = proportion + "%";
 
