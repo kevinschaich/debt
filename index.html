@@ -208,7 +208,6 @@
 
                 var xmin = 0;
                 var height = data.length * (BarHeight + BarSpacing) + graphSpacing;
-                console.log(cur_height);
 
                 var canvas = d3.select('#wrapper')
                 .select('#main')
@@ -400,11 +399,12 @@
                 if (i['Linking']){
                     var offset_h = parseFloat(i["height_offset"]);
                     var y = parseFloat(d3.select(this).attr("y"));
+                    var price = parseFloat(i['price']);
                     if (linkingGroups[i['Linking']]){
-                        linkingGroups[i['Linking']].unshift(offset_h+y);
+                        linkingGroups[i['Linking']].unshift({"y":offset_h+y,"price":price});
                     }
                     else{
-                        linkingGroups[i['Linking']] = [offset_h+y];
+                        linkingGroups[i['Linking']] = [{"y":offset_h+y,"price":price}];
                     }
                 }
             });
@@ -415,10 +415,16 @@
             Object.keys(linkingGroups).forEach(function (d,i){
                 pathinfo = [];
                 linkingGroups[d].forEach(function (val,i){
-                    pathinfo.push(val);
+                    pathinfo.push(val["y"]);
+                });
+
+                priceinfo = [];
+                linkingGroups[d].forEach(function (val,i){
+                    priceinfo.push(val["price"]);
                 });
 
                 pathinfo.sort();
+                priceinfo.sort();
 
                 var baryMidpoint = BarHeight/2;
 
@@ -437,6 +443,20 @@
                     var scalingFactor = midy - Math.min(y1,y2);
                     var midx = xCurveScaling(scalingFactor);
                     var path = "M 300 {0} C {2} {0} {2} {1} 300 {1}".format(y1,y2,midx);
+
+                    var pricediff = Math.abs(priceinfo[i+1] - priceinfo[i]);
+                    var minprice = Math.min(priceinfo[i+1],priceinfo[i]);
+                    var maxprice = Math.min(priceinfo[i+1],priceinfo[i]);
+
+                    var proportion = Math.trunc(pricediff/minprice * 100);
+
+                    var textProportion = proportion + "%";
+
+                    canvas.append("text")
+                    .text(textProportion)
+                    .attr("x",midx)
+                    .attr("y",midy)
+                    .style("fill", "white");
 
                     canvas.append("svg:path")
                     .attr("d",path)
