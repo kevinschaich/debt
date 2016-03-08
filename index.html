@@ -61,7 +61,7 @@
     <script>
         d3.csv("data.csv", function(data) {
 
-            console.log(data);
+            // console.log(data);
 
             ////////////////////////////////////////////////////////////////////
             // CONSTANTS ///////////////////////////////////////////////////////
@@ -91,7 +91,7 @@
                     categories.push(data[i]['category']);
             }
 
-            console.log(categories.length);
+            // console.log(categories.length);
 
             // canvas geometry
             var width = 1440;
@@ -297,6 +297,8 @@
                 linkingGroups[d].forEach(function (val,i){
                     pathinfo.push(val);
                 });
+
+                pathinfo.sort();
 
                 var baryMidpoint = BarHeight/2;
 
