@@ -145,8 +145,6 @@
         var categories;
         d3.csv("data.csv", function(data) {
 
-            // console.log(data);
-
             ////////////////////////////////////////////////////////////////////
             // CONSTANTS ///////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
@@ -175,8 +173,6 @@
                 if (categories.indexOf(data[i]['category']) === -1)
                     categories.push(data[i]['category']);
             }
-
-            // console.log(categories.length);
 
             // canvas geometry
             var width = 1200;
@@ -461,9 +457,22 @@
 
                     var textProportion = proportion + "%";
 
+                    if (midx > 1100){
+                        var textMid = 1000
+                    }
+                    else if (midx >830){
+                        var textMid = 770;
+                    }
+                    else if (midx > 720){
+                        var textMid = 670;
+                    }
+                    else {
+                        textMid = midx;
+                    }
+
                     canvas.append("text")
                     .text(textProportion)
-                    .attr("x",midx)
+                    .attr("x",textMid)
                     .attr("y",midy)
                     .style("fill", "white");
 
