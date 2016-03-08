@@ -5,6 +5,10 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <style>
+        body, html, svg {
+            margin: 0;
+            padding: 0;
+        }
         #xaxis .domain {
             fill:none;
         }
@@ -50,7 +54,7 @@
         #footer i {
             font-size: 75%;
         }
-        #footer a, #footer a:hover, #footer a:visited {
+        #footer a, #footer a:hover, #footer a:visited, #footer p {
             color: #E0E0E0;
             font-weight: 300;
         }
@@ -74,13 +78,12 @@
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
-            background: ;
         }
 
         /* Modal Content/Box */
         .modal-content {
-            background: rgba(30,33,43, .7);
-            margin: 15% auto; /* 15% from the top and centered */
+            background: rgba(30,33,43, .9);
+            margin: 50px auto; /* 15% from the top and centered */
             padding: 20px;
             width: 500px;
             color: #E0E0E0;
@@ -103,6 +106,15 @@
         }
         #sourceTable th {
             padding-bottom: 10px;
+        }
+/*         .zip {
+            fill: linear-gradient(right, rgba(255,0,0,0), rgba(255,0,0,1));
+        } */
+        #legend {
+            position: absolute;
+            top: 100px;
+            left: 1000px;
+            font-size: 22px;
         }
 
     </style>
@@ -127,9 +139,10 @@
 </head>
 <body>
     <div id="title">Scale of the U.S. National Debt</div>
-    <div id="wrapper">
-    </div>
+    <div id="wrapper"></div>
     <script>
+
+        var categories;
         d3.csv("data.csv", function(data) {
 
             // console.log(data);
@@ -144,7 +157,7 @@
 
             // padding / spacing
             var paddingLeft = 300;
-            var paddingRight = paddingLeft;
+            var paddingRight = paddingLeft / 3;
             var paddingTop = BarHeight;
             var paddingBottom = 0;
             var graphSpacing = BarHeight * 2;
@@ -157,7 +170,7 @@
             var scales = [1000, 1000000, 1000000000, 1000000000000];
             var colors = ['#bf616a', '#d08770', '#ebcb8b', '#a3be8c', '#796895', '#5C7DA4', '#b48ead', '#ab7967', '#537776'];
 
-            var categories = [];
+            categories = [];
             for (var i = 0; i < data.length; i++) {
                 if (categories.indexOf(data[i]['category']) === -1)
                     categories.push(data[i]['category']);
@@ -166,7 +179,16 @@
             // console.log(categories.length);
 
             // canvas geometry
-            var width = 1440;
+            var width = 1200;
+            if (window.innerWidth < 1200) {
+                width = 1200;
+            }
+            else if (window.innerWidth > 2000) {
+                width = 2000;
+            }
+            else {
+                width = window.innerWidth;
+            }
             var height = data.length * (BarHeight + BarSpacing) + (graphSpacing * scales.length) + 400;
             var cur_height = 0;
             var canvas = d3.select('#wrapper')
@@ -320,16 +342,19 @@
                 cur_height += height + graphSpacing;
             }
 
-            var legend = d3.select('svg')
+            var legend = d3.select('#wrapper')
+            .append('svg')
+            .attr("id","legend")
+            .attr({'width': 250,'height': 250})
             .append('g')
             .selectAll('text')
             .data(categories)
             .enter()
             .append('text')
             .attr({
-                'x': 800,
+                'x': 0,
                 'y': function(d, i) {
-                    return i * 20;
+                    return i * 30;
                 },
                 'id': 'legend'
             })
@@ -342,7 +367,6 @@
                     return colors[i];
                 }
             });
-
             ////////////////////////////////////////////////////////////////////
             // CREATE PARTITIONS ///////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
@@ -425,28 +449,47 @@
             // CREATE INSET ////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
 
-            var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
-            canvas.append("svg:path")
-            .attr("d",path)
-            .style("stroke-width", 10)
-            .attr("fill","grey")
-            .style("opacity","0.5");
+            var gradient = canvas.append("defs")
+            .append("linearGradient")
+            .attr("id", "gradient")
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "0%")
+            .attr("y2", "100%")
+            .attr("spreadMethod", "pad");
 
-            var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
+            gradient.append("stop")
+            .attr("offset", "0%")
+            .attr("stop-color", "#839DCF")
+            .attr("stop-opacity", 0);
+
+            gradient.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", "#839DCF")
+            .attr("stop-opacity", .5);
+
+            var path = "M 300,775 C 300,705 "+ width + ",705 "+ width + ",705 L 300,705 Z";
             canvas.append("svg:path")
             .attr("d",path)
             .style("stroke-width", 10)
-            .attr("fill","grey")
-            .style("opacity","0.5")
+            .attr("class","zip")
+            .attr("fill", "url(#gradient)")
+
+            var path = "M 300,775 C 300,705 "+ width + ",705 "+ width + ",705 L 300,705 Z";
+            canvas.append("svg:path")
+            .attr("d",path)
+            .style("stroke-width", 10)
+            .attr("class","zip")
+            .attr("fill", "url(#gradient)")
             .attr("transform","translate(0,1720)");
 
 
-            var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
+            var path = "M 300,775 C 300,705 "+ width + ",705 "+ width + ",705 L 300,705 Z";
             canvas.append("svg:path")
             .attr("d",path)
             .style("stroke-width", 10)
-            .attr("fill","grey")
-            .style("opacity","0.5")
+            .attr("class","zip")
+            .attr("fill", "url(#gradient)")
             .attr("transform","translate(0,915)");
 
             var sources = document.getElementById('sourceTable');
