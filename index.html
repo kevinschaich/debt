@@ -61,7 +61,7 @@
     <div id="padding">
     </div>
     <script>
-        d3.csv("data2.csv", function(data) {
+        d3.csv("data3.csv", function(data) {
 
             console.log(data);
 
@@ -85,7 +85,7 @@
             var subtitleOffset = 10;
 
             // scales / colors
-            var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
+            var scales = [1000, 1000000, 1000000000, 1000000000000];
             var colors = ['#bf616a', '#d08770', '#ebcb8b', '#a3be8c', '#96b5b4', '#8fa1b3', '#b48ead', '#ab7967'];
             var categories = [];
             for (var i = 0; i < data.length; i++) {
@@ -267,6 +267,7 @@
                     cur++;
                 }
             });
+            console.log(partitions);
             drawGraph(partitions[i].reverse(),scales[cur]);
 
             ////////////////////////////////////////////////////////////////////
