@@ -83,7 +83,7 @@
             var subtitleOffset = 10;
 
             // scales / colors
-            var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
+            var scales = [1000, 1000000, 1000000000, 1000000000000];
             var colors = ['#bf616a', '#d08770', '#ebcb8b', '#a3be8c', '#796895', '#5C7DA4', '#b48ead', '#ab7967', '#537776'];
             var categories = [];
             for (var i = 0; i < data.length; i++) {
@@ -114,6 +114,8 @@
 
                 var xmin = 0;
                 var height = data.length * (BarHeight + BarSpacing);
+
+                console.log("height is" + height);
                 var canvas = d3.select('#wrapper')
                 .select('#main')
                 .append("g")
@@ -267,7 +269,6 @@
                     cur++;
                 }
             });
-            console.log(partitions);
             drawGraph(partitions[i].reverse(),scales[cur]);
 
             ////////////////////////////////////////////////////////////////////
@@ -324,6 +325,59 @@
                     .attr("class", "arc");
                 };
             });
+
+            ////////////////////////////////////////////////////////////////////
+            // CREATE INSET ////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
+
+            for (var i=0;i<partitions.length-1;i++){
+                var last_prev = partitions[i][0];
+                var first_next = partitions[i+1][partitions[i+1].length-1];
+                var bars = d3.selectAll('#bars');
+                var last_bar;
+                var next_bar;
+                bars.each(function(i) {
+                    if (i.name == last_prev.name){
+                        last_bar = d3.select(this);
+                    }
+                    if (i.name == first_next.name){
+                        next_bar = d3.select(this);
+                    }
+                });
+                var offset_last = parseFloat(last_prev["height_offset"]);
+                var offset_next = parseFloat(first_next["height_offset"]);
+
+                // start point
+                var x1 = next_bar.attr("x");
+                var y1 = next_bar.attr("y") + offset_next;
+
+                console.log("offset last is" + offset_last);
+                console.log("offset next is" + offset_next);
+
+                //end point
+                var x2 = last_bar.attr("x");
+                var y2 = last_bar.attr("y") + offset_last;
+
+                // control point 1
+                var cx = next_bar.attr("x");
+                var cy = next_bar.attr("y")-graphSpacing + 25 + offset_next;
+
+                var cx1 = last_bar.attr("x") + 100;
+                var cy2 = last_bar.attr("y") + offset_last;
+
+                var path = "M {0},{1} C {2},{3} {4},{5} {6},{7}".format(x1,y1,cx,cy,cx1,cy2,x2,y2);
+
+                console.log(y1);
+                console.log(y2);
+                canvas.append("svg:path")
+                .attr("d",path)
+                .style("stroke-width", 10)
+                .attr("class", "arc");
+
+                console.log(path);
+
+            }
+
         });
     </script>
 </body>
