@@ -151,6 +151,7 @@
             // titles
             var titleOffset = -10;
             var subtitleOffset = 10;
+            var allGraphOffsets = [];
 
             // scales / colors
             var scales = [1000, 1000000, 1000000000, 1000000000000];
@@ -184,9 +185,9 @@
                 ////////////////////////////////////////////////////////////////
 
                 var xmin = 0;
-                var height = data.length * (BarHeight + BarSpacing);
+                var height = data.length * (BarHeight + BarSpacing) + graphSpacing;
+                console.log(cur_height);
 
-                console.log("height is" + height);
                 var canvas = d3.select('#wrapper')
                 .select('#main')
                 .append("g")
@@ -316,6 +317,7 @@
                 slice(xmax, 10, 2);
                 slice(xmax, 100, 0.5);
 
+                allGraphOffsets.push(cur_height);
                 cur_height += height + graphSpacing;
             }
 
@@ -397,58 +399,83 @@
                 };
             });
 
-<<<<<<< HEAD
             ////////////////////////////////////////////////////////////////////
             // CREATE INSET ////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
 
-            for (var i=0;i<partitions.length-1;i++){
-                var last_prev = partitions[i][0];
-                var first_next = partitions[i+1][partitions[i+1].length-1];
-                var bars = d3.selectAll('#bars');
-                var last_bar;
-                var next_bar;
-                bars.each(function(i) {
-                    if (i.name == last_prev.name){
-                        last_bar = d3.select(this);
-                    }
-                    if (i.name == first_next.name){
-                        next_bar = d3.select(this);
-                    }
-                });
-                var offset_last = parseFloat(last_prev["height_offset"]);
-                var offset_next = parseFloat(first_next["height_offset"]);
+            // for (var i=0;i<partitions.length-1;i++){
+            //     var last_prev = partitions[i][0];
+            //     var first_next = partitions[i+1][partitions[i+1].length-1];
+            //     var bars = d3.selectAll('#bars');
+            //     var last_bar;
+            //     var next_bar;
+            //     bars.each(function(i) {
+            //         if (i.name == "$1 Million"){
+            //             console.log("1 million "+d3.select(this).attr("y"));
+            //         }
 
-                // start point
-                var x1 = next_bar.attr("x");
-                var y1 = next_bar.attr("y") + offset_next;
+            //         if (!last_bar && i.name == last_prev.name){
+            //             last_bar = d3.select(this);
+            //         }
+            //         else if (i.name == first_next.name){
+            //             next_bar = d3.select(this);
+            //         }
+            //     });
+            //     console.log(next_bar);
+            //     console.log(last_bar);
+            //     if (next_bar && last_bar){
+            //         var offset_last = allGraphOffsets[i];
+            //         var offset_next = allGraphOffsets[i+1];
 
-                console.log("offset last is" + offset_last);
-                console.log("offset next is" + offset_next);
+            //         // start point
+            //         var x1 = parseFloat(next_bar.attr("x"));
+            //         var y1 = parseFloat(next_bar.attr("y")) + offset_next;
 
-                //end point
-                var x2 = last_bar.attr("x");
-                var y2 = last_bar.attr("y") + offset_last;
+            //         //end point
+            //         var x2 = width - paddingLeft;
+            //         var y2 = parseFloat(last_bar.attr("y")) + offset_last;
 
-                // control point 1
-                var cx = next_bar.attr("x");
-                var cy = next_bar.attr("y")-graphSpacing + 25 + offset_next;
+            //         // control point 1
+            //         var cx = parseFloat(next_bar.attr("x"));
+            //         var cy = parseFloat(next_bar.attr("y")-graphSpacing) + offset_next;
 
-                var cx1 = last_bar.attr("x") + 100;
-                var cy2 = last_bar.attr("y") + offset_last;
+            //         var cx1 = width - paddingLeft;
+            //         var cy2 = parseFloat(last_bar.attr("y")) + offset_last;
 
-                var path = "M {0},{1} C {2},{3} {4},{5} {6},{7}".format(x1,y1,cx,cy,cx1,cy2,x2,y2);
+            //         var path = "M {0},{1} C {2},{3} {4},{5} {6},{7}".format(x1,y1,cx,cy,cx1,cy2,x2,y2);
 
-                console.log(y1);
-                console.log(y2);
-                canvas.append("svg:path")
-                .attr("d",path)
-                .style("stroke-width", 10)
-                .attr("class", "arc");
+            //         canvas.append("svg:path")
+            //         .attr("d",path)
+            //         .style("stroke-width", 10)
+            //         .attr("fill","grey")
+            //         .style("opacity","0.5");
 
-                console.log(path);
+            //         console.log(path);
+            //     }
+            //}
+            var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
+            canvas.append("svg:path")
+            .attr("d",path)
+            .style("stroke-width", 10)
+            .attr("fill","grey")
+            .style("opacity","0.5");
 
-            }
+            var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
+            canvas.append("svg:path")
+            .attr("d",path)
+            .style("stroke-width", 10)
+            .attr("fill","grey")
+            .style("opacity","0.5")
+            .attr("transform","translate(0,1720)");
+
+
+            var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
+            canvas.append("svg:path")
+            .attr("d",path)
+            .style("stroke-width", 10)
+            .attr("fill","grey")
+            .style("opacity","0.5")
+            .attr("transform","translate(0,915)");
 
             var sources = document.getElementById('sourceTable');
 
