@@ -45,7 +45,6 @@
             opacity: .3;
         }
         #footer {
-            /* margin-left: 300px; */
             text-align: center;
         }
         #footer i {
@@ -62,6 +61,7 @@
             border: none;
             outline: none;
             text-decoration: underline;
+            font-weight:300;
         }
 
         /* The Modal (background) */
@@ -152,7 +152,6 @@
             // titles
             var titleOffset = -10;
             var subtitleOffset = 10;
-            var allGraphOffsets = [];
 
             // scales / colors
             var scales = [1000, 1000000, 1000000000, 1000000000000];
@@ -168,7 +167,7 @@
 
             // canvas geometry
             var width = 1440;
-            var height = data.length * (BarHeight + BarSpacing) + (graphSpacing * scales.length);
+            var height = data.length * (BarHeight + BarSpacing) + (graphSpacing * scales.length) + 400;
             var cur_height = 0;
             var canvas = d3.select('#wrapper')
             .append('svg')
@@ -318,42 +317,11 @@
                 slice(xmax, 10, 2);
                 slice(xmax, 100, 0.5);
 
-                allGraphOffsets.push(cur_height);
                 cur_height += height + graphSpacing;
             }
 
-            // var legendSpacing = 30;
-            // var legendRectSize  = 20;
-
-            // var legend = d3.select('svg')
-            // .append("g")
-            // .selectAll("g")
-            // .data(categories)
-            // .enter()
-            // .append('g')
-            // .attr('class', 'legend')
-            // .attr('transform', function(d, i) {
-            //     var height = 40;
-            //     var x = 0;
-            //     var y = i * height;
-            //     return 'translate(' + x + 800 +  ',' + y + ')';
-            // });
-
-            // console.log(categories);
-
-            // legend.append('text')
-            // .attr('x', legendRectSize + legendSpacing)
-            // .attr('y', legendRectSize - legendSpacing)
-            // .text(function(d) { return d; })
-            // .style(
-            // {
-            //     'fill': function(d, i) {
-            //         var i = categories.indexOf(data[i]['category']);
-            //         console.log(i);
-            //         return colors[i];
-            //     }
-            // });
-            var chart = canvas
+            var legend = d3.select('svg')
+            .append('g')
             .selectAll('text')
             .data(categories)
             .enter()
@@ -362,7 +330,8 @@
                 'x': 800,
                 'y': function(d, i) {
                     return i * 20;
-                }
+                },
+                'id': 'legend'
             })
             .text(function(d) {
                 return d;
@@ -373,7 +342,6 @@
                     return colors[i];
                 }
             });
-
 
             ////////////////////////////////////////////////////////////////////
             // CREATE PARTITIONS ///////////////////////////////////////////////
@@ -457,56 +425,6 @@
             // CREATE INSET ////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
 
-            // for (var i=0;i<partitions.length-1;i++){
-            //     var last_prev = partitions[i][0];
-            //     var first_next = partitions[i+1][partitions[i+1].length-1];
-            //     var bars = d3.selectAll('#bars');
-            //     var last_bar;
-            //     var next_bar;
-            //     bars.each(function(i) {
-            //         if (i.name == "$1 Million"){
-            //             console.log("1 million "+d3.select(this).attr("y"));
-            //         }
-
-            //         if (!last_bar && i.name == last_prev.name){
-            //             last_bar = d3.select(this);
-            //         }
-            //         else if (i.name == first_next.name){
-            //             next_bar = d3.select(this);
-            //         }
-            //     });
-            //     console.log(next_bar);
-            //     console.log(last_bar);
-            //     if (next_bar && last_bar){
-            //         var offset_last = allGraphOffsets[i];
-            //         var offset_next = allGraphOffsets[i+1];
-
-            //         // start point
-            //         var x1 = parseFloat(next_bar.attr("x"));
-            //         var y1 = parseFloat(next_bar.attr("y")) + offset_next;
-
-            //         //end point
-            //         var x2 = width - paddingLeft;
-            //         var y2 = parseFloat(last_bar.attr("y")) + offset_last;
-
-            //         // control point 1
-            //         var cx = parseFloat(next_bar.attr("x"));
-            //         var cy = parseFloat(next_bar.attr("y")-graphSpacing) + offset_next;
-
-            //         var cx1 = width - paddingLeft;
-            //         var cy2 = parseFloat(last_bar.attr("y")) + offset_last;
-
-            //         var path = "M {0},{1} C {2},{3} {4},{5} {6},{7}".format(x1,y1,cx,cy,cx1,cy2,x2,y2);
-
-            //         canvas.append("svg:path")
-            //         .attr("d",path)
-            //         .style("stroke-width", 10)
-            //         .attr("fill","grey")
-            //         .style("opacity","0.5");
-
-            //         console.log(path);
-            //     }
-            //}
             var path = "M 300,775 C 300,675 1140,675 1140,675 L 300,675 Z";
             canvas.append("svg:path")
             .attr("d",path)
