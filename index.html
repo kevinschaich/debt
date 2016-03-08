@@ -429,8 +429,8 @@
                 .range([paddingLeft, width - paddingRight]);
 
                 var widthScaling = d3.scale.linear()
-                .domain([0, curveMax])
-                .range([5, 40]);
+                .domain([0, 6.5])
+                .range([0, 22]);
 
                 for (var i=0;i<pathinfo.length-1;i++){
                     var y1 = pathinfo[i]+baryMidpoint;
@@ -478,7 +478,7 @@
 
                     canvas.append("svg:path")
                     .attr("d",path)
-                    .style("stroke-width", widthScaling(scalingFactor))
+                    .style("stroke-width", widthScaling(Math.log(proportion)))
                     .attr("class", "arc");
                 };
             });
