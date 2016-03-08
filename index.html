@@ -7,15 +7,33 @@
             fill:none;
         }
         body {
-            font-family: Roboto;
+            font-family: Roboto Slab;
+            fill: white;
+            font-size: 12pt;
+            background: #2B303B;
         }
         .x.axis {
             font-size: 8pt;
-            fill: #323232;
+            fill: white;
             border: 1px solid #323232;
+        }
+        .sub.axis {
+            font-size: 10pt;
+            fill: #969696;
+            font-family: Roboto;
+            font-size: ;
         }
         .axis path {
             fill: none;
+        }
+        rect {
+            rx: 3;
+            ry: 3;
+        }
+        .arc {
+            fill: none;
+            stroke: white;
+            opacity: .6;
         }
 
     </style>
@@ -53,13 +71,13 @@
 
             // bars
             var BarHeight = 50;
-            var BarSpacing = 10;
+            var BarSpacing = 5;
 
             // padding / spacing
             var paddingLeft = 300;
             var paddingRight = paddingLeft;
-            var paddingTop = BarSpacing * 4;
-            var paddingBottom = BarSpacing;
+            var paddingTop = BarHeight;
+            var paddingBottom = 0;
             var graphSpacing = BarHeight * 2;
 
             // titles
@@ -68,7 +86,7 @@
 
             // scales / colors
             var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
-            var colors = ['#8748ED', '1F94E8', '#90F101', '#FF3969', '#FF6926', '#E862DB'];
+            var colors = ['#bf616a', '#d08770', '#ebcb8b', '#a3be8c', '#96b5b4', '#8fa1b3', '#b48ead', '#ab7967'];
             var categories = [];
             for (var i = 0; i < data.length; i++) {
                 if (categories.indexOf(data[i]['category']) === -1)
@@ -76,7 +94,7 @@
             }
 
             // canvas geometry
-            var width = window.innerWidth;
+            var width = 1440;
             var height = data.length * (BarHeight + BarSpacing) + (graphSpacing * scales.length);
             var cur_height = 0;
             var canvas = d3.select('#wrapper')
@@ -167,14 +185,14 @@
 
                 // Create axes
                 canvas.append("g")
-                .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + BarHeight) + ")")
+                .attr("transform", "translate(" + paddingLeft +"," + (height - paddingBottom + (BarHeight / 1.5)) + ")")
                 .attr("class", "x axis").call(xAxis);
                 canvas.append("g")
-                .attr("transform", "translate(" + (paddingLeft - 10) + ","+titleOffset+")")
+                .attr("transform", "translate(" + (paddingLeft - 10) + "," + titleOffset + ")")
                 .attr("class", "y axis").call(yAxis);
                 canvas.append("g")
-                .attr("transform", "translate(" + (paddingLeft - 10) + ","+subtitleOffset+")")
-                .attr("class", "y axis").call(subyAxis);
+                .attr("transform", "translate(" + (paddingLeft - 10) + ","+ subtitleOffset +")")
+                .attr("class", "y sub axis").call(subyAxis);
 
                 ////////////////////////////////////////////////////////////////
                 // BARS ////////////////////////////////////////////////////////
@@ -216,10 +234,10 @@
                         .attr({
                             'x': xscale((xmax / partitions) * i) + paddingLeft,
                             'width': width,
-                            'y': paddingTop,
-                            'height': height
+                            'y': -paddingTop,
+                            'height': height + 80
                         })
-                        .style('fill', 'white')
+                        .style('fill', '#2B303B')
                     }
                 }
                 slice(xmax, 10, 2);
@@ -287,7 +305,7 @@
 
                 var widthScaling = d3.scale.linear()
                 .domain([0, curveMax])
-                .range([8,30]);
+                .range([5, 40]);
 
                 for (var i=0;i<pathinfo.length-1;i++){
                     var y1 = pathinfo[i]+baryMidpoint;
@@ -300,9 +318,7 @@
                     canvas.append("svg:path")
                     .attr("d",path)
                     .style("stroke-width", widthScaling(scalingFactor))
-                    .style("stroke", "grey")
-                    .style("fill", "none")
-                    .style("opacity","0.5");
+                    .attr("class", "arc");
                 };
             });
         });
