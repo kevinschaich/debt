@@ -8,20 +8,18 @@
         }
         body {
             font-family: Roboto Slab;
-            fill: white;
+            fill: #E0E0E0;
             font-size: 12pt;
             background: #2B303B;
         }
         .x.axis {
             font-size: 8pt;
-            fill: white;
-            border: 1px solid #323232;
         }
         .sub.axis {
             font-size: 10pt;
-            fill: #969696;
+            fill: #878787;
             font-family: Roboto;
-            font-size: ;
+            font-size: 10pt;
         }
         .axis path {
             fill: none;
@@ -32,7 +30,7 @@
         }
         .arc {
             fill: none;
-            stroke: white;
+            stroke: #E0E0E0;
             opacity: .6;
         }
 
@@ -61,7 +59,7 @@
     <div id="padding">
     </div>
     <script>
-        d3.csv("data3.csv", function(data) {
+        d3.csv("data.csv", function(data) {
 
             console.log(data);
 
@@ -92,6 +90,8 @@
                 if (categories.indexOf(data[i]['category']) === -1)
                     categories.push(data[i]['category']);
             }
+
+            console.log(categories.length);
 
             // canvas geometry
             var width = 1440;
@@ -178,7 +178,7 @@
                 .scale(yscale)
                 .tickFormat(function(d,i){
                     try {
-                        return data[i].Subtitle;
+                        return data[i].subtitle;
                     } catch(e) {}
                 })
                 .tickValues(d3.range(data.length));
