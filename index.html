@@ -53,6 +53,7 @@
         }
         #footer a, #footer a:hover, #footer a:visited {
             color: #E0E0E0;
+            font-weight: 300;
         }
 
         #myBtn {
@@ -316,35 +317,57 @@
                 cur_height += height + graphSpacing;
             }
 
-        var legendSpacing = 30;
-            var legendRectSize  = 20;
+            // var legendSpacing = 30;
+            // var legendRectSize  = 20;
 
-                var legend = d3.select('svg')
-                .append("g")
-                .selectAll("g")
-                .data(categories)
-                .enter()
-                .append('g')
-                  .attr('class', 'legend')
-                  .attr('transform', function(d, i) {
-                    var height = 40;
-                    var x = 0;
-                    var y = i * height;
-                    return 'translate(' + x + 800 +  ',' + y + ')';
-                });
+            // var legend = d3.select('svg')
+            // .append("g")
+            // .selectAll("g")
+            // .data(categories)
+            // .enter()
+            // .append('g')
+            // .attr('class', 'legend')
+            // .attr('transform', function(d, i) {
+            //     var height = 40;
+            //     var x = 0;
+            //     var y = i * height;
+            //     return 'translate(' + x + 800 +  ',' + y + ')';
+            // });
 
-                console.log(categories);
+            // console.log(categories);
 
-                legend.append('text')
-                .attr('x', legendRectSize + legendSpacing)
-                .attr('y', legendRectSize - legendSpacing)
-                .text(function(d) { return d; })
-                .style({  'fill': function(d, i)
-                {
-                      var i = categories.indexOf(data[i]['category']);
-                      console.log(i);
-                      return colors[i];
-                    } });
+            // legend.append('text')
+            // .attr('x', legendRectSize + legendSpacing)
+            // .attr('y', legendRectSize - legendSpacing)
+            // .text(function(d) { return d; })
+            // .style(
+            // {
+            //     'fill': function(d, i) {
+            //         var i = categories.indexOf(data[i]['category']);
+            //         console.log(i);
+            //         return colors[i];
+            //     }
+            // });
+            var chart = canvas
+            .selectAll('text')
+            .data(categories)
+            .enter()
+            .append('text')
+            .attr({
+                'x': 800,
+                'y': function(d, i) {
+                    return i * 20;
+                }
+            })
+            .text(function(d) {
+                return d;
+            })
+            .style({
+                'fill': function(d, i) {
+                    var i = categories.indexOf(d);
+                    return colors[i];
+                }
+            });
 
 
             ////////////////////////////////////////////////////////////////////
