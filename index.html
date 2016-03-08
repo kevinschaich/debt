@@ -13,7 +13,7 @@
             background: #2B303B;
         }
         .x.axis {
-            font-size: 8pt;
+            font-size: 10pt;
         }
         .sub.axis {
             font-size: 10pt;
@@ -83,8 +83,8 @@
             var subtitleOffset = 10;
 
             // scales / colors
-            var scales = [1000, 1000000, 1000000000, 1000000000000];
-            var colors = ['#bf616a', '#d08770', '#ebcb8b', '#a3be8c', '#96b5b4', '#8fa1b3', '#b48ead', '#ab7967'];
+            var scales = [1000, 1000000, 1000000000, 1000000000000,  20000000000000];
+            var colors = ['#bf616a', '#d08770', '#ebcb8b', '#a3be8c', '#796895', '#5C7DA4', '#b48ead', '#ab7967', '#537776'];
             var categories = [];
             for (var i = 0; i < data.length; i++) {
                 if (categories.indexOf(data[i]['category']) === -1)
@@ -234,8 +234,8 @@
                         .attr({
                             'x': xscale((xmax / partitions) * i) + paddingLeft,
                             'width': width,
-                            'y': -paddingTop,
-                            'height': height + 80
+                            'y': 0,
+                            'height': height + 30
                         })
                         .style('fill', '#2B303B')
                     }
