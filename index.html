@@ -17,6 +17,7 @@
         .axis path {
             fill: none;
         }
+
     </style>
 
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -44,23 +45,25 @@
     <script>
         d3.csv("data2.csv", function(data) {
 
+            console.log(data);
+
             ////////////////////////////////////////////////////////////////////
             // CONSTANTS ///////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////
 
             // bars
-            var BarHeight = 40;
-            var BarSpacing = 20;
+            var BarHeight = 50;
+            var BarSpacing = 10;
 
             // padding / spacing
-            var paddingLeft = 250;
+            var paddingLeft = 300;
             var paddingRight = paddingLeft;
-            var paddingTop = BarSpacing;
+            var paddingTop = BarSpacing * 4;
             var paddingBottom = BarSpacing;
             var graphSpacing = BarHeight * 2;
 
             // titles
-            var titleOffset = 0;
+            var titleOffset = -10;
             var subtitleOffset = 10;
 
             // scales / colors
@@ -96,7 +99,8 @@
                 var canvas = d3.select('#wrapper')
                 .select('#main')
                 .append("g")
-                .attr("transform", "translate(0," + cur_height + ")");
+                .attr("transform", "translate(0," + cur_height + ")")
+                .attr('class', 'inset');
 
                 var tickVals = [0];
                 for (var i = 0; i <= 10; i++) {
@@ -121,8 +125,7 @@
 
                 // X axis
                 var formatValue = d3.format("$s");
-                var xAxis = d3.svg.axis();
-                xAxis
+                var xAxis = d3.svg.axis()
                 .orient('bottom')
                 .scale(xscale)
                 .tickValues(tickVals)
@@ -144,8 +147,7 @@
                 });
 
                 // Y axis
-                var yAxis = d3.svg.axis();
-                yAxis
+                var yAxis = d3.svg.axis()
                 .orient('left')
                 .scale(yscale)
                 .tickFormat(function(d,i){
@@ -153,15 +155,15 @@
                 })
                 .tickValues(d3.range(data.length));
 
-                var subyAxis = d3.svg.axis();
-                subyAxis
+                var subyAxis = d3.svg.axis()
                 .orient('left')
                 .scale(yscale)
                 .tickFormat(function(d,i){
                     try {
                         return data[i].Subtitle;
                     } catch(e) {}
-                });
+                })
+                .tickValues(d3.range(data.length));
 
                 // Create axes
                 canvas.append("g")
@@ -212,9 +214,9 @@
                     for (var i = 1; i < partitions; i++){
                         canvas.append('rect')
                         .attr({
-                            'x': xscale((xmax/partitions) * i) + paddingLeft ,
+                            'x': xscale((xmax / partitions) * i) + paddingLeft,
                             'width': width,
-                            'y': 0,
+                            'y': paddingTop,
                             'height': height
                         })
                         .style('fill', 'white')
@@ -293,7 +295,7 @@
                     var midy = (y1+y2)/2;
                     var scalingFactor = midy - Math.min(y1,y2);
                     var midx = xCurveScaling(scalingFactor);
-                    var path = "M 250 {0} C {2} {0} {2} {1} 250 {1}".format(y1,y2,midx);
+                    var path = "M 300 {0} C {2} {0} {2} {1} 300 {1}".format(y1,y2,midx);
 
                     canvas.append("svg:path")
                     .attr("d",path)
