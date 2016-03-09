@@ -69,6 +69,10 @@ rect {
     outline: none;
     text-decoration: underline;
     font-weight:300;
+    cursor: pointer;
+}
+#myBtn: hover {
+    cursor: pointer;
 }
 
 /* The Modal (background) */
