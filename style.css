@@ -1,0 +1,115 @@
+body, html, svg {
+    margin: 0;
+    padding: 0;
+}
+#xaxis .domain {
+    fill:none;
+}
+body, #myBtn {
+    font-family: "Roboto Slab", serif;
+    font-weight: 400;
+    fill: #E0E0E0;
+    color: #E0E0E0;
+    font-size: 12pt;
+    background: #2B303B;
+}
+.bold {
+    font-weight: 900;
+}
+#title {
+    font-weight: 900;
+    font-size: 20pt;
+    margin-left: 300px;
+    margin-top: 20px;
+}
+#blurb {
+    margin-left: 300px;
+    margin-right: 300px;
+}
+.x.axis {
+    font-size: 10pt;
+}
+.sub.axis {
+    font-size: 10pt;
+    fill: #878787;
+    font-family: "Roboto";
+    font-size: 10pt;
+    font-weight: 300;
+}
+.axis path {
+    fill: none;
+}
+rect {
+    rx: 3;
+    ry: 3;
+}
+.arc {
+    fill: none;
+    stroke: #E0E0E0;
+    opacity: .3;
+}
+#footer {
+    text-align: center;
+}
+#footer i {
+    font-size: 75%;
+}
+#footer a, #footer a:hover, #footer a:visited, #footer p {
+    color: #E0E0E0;
+    font-weight: 300;
+}
+
+#myBtn {
+    fill: none;
+    background: none;
+    border: none;
+    outline: none;
+    text-decoration: underline;
+    font-weight:300;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background: rgba(30,33,43, .9);
+    margin: 50px auto; /* 15% from the top and centered */
+    padding: 20px;
+    width: 500px;
+    color: #E0E0E0;
+}
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+#sourceTable a {
+    color: #E0E0E0;
+}
+#sourceTable th {
+    padding-bottom: 10px;
+}
+#legend {
+    position: absolute;
+    top: 100px;
+    left: 900px;
+    font-size: 22px;
+}
