@@ -13,7 +13,7 @@ body, #myBtn {
     font-size: 12pt;
     background: #2B303B;
 }
-.bold {
+.bold, #blurb .bold a {
     font-weight: 900;
 }
 #title {
@@ -54,8 +54,11 @@ rect {
 #footer i {
     font-size: 75%;
 }
-#footer a, #footer a:hover, #footer a:visited, #footer p {
+#footer a, #footer a:hover, #footer a:visited, #footer p, #footer button, #blurb a, #blurb a:hover, #blurb a:visited {
     color: #E0E0E0;
+    font-weight: 900;
+}
+#footer p, {
     font-weight: 300;
 }
 
