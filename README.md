@@ -1,6 +1,7 @@
 # Debt
 
 Scale of the U.S. National Debt in 2016
+
 ### Overview 
 Our data came from all parts of the web – all of the sources for every numerical value used to render our graphs are available in the CSV document that we have zipped and submitted. We have a modal, found at the bottom of our visualization, which contains each item’s name, the item’s price and its corresponding source for which the price of the item was listed.
 Data for mundane objects and services as well as extraordinary, extraorbitant luxury items were collected in order to compare and contrast the wide differences in cost. The costs of the items would start on the order of several dollars, up until extraorbitant trillions of dollars.
