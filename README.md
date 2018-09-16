@@ -31,3 +31,7 @@ We capped the scaling at 1 trillion so that we can show the sense of scale of th
 ### Impact 
 
 What we wanted to show with our visualization is more than just the fact that the U.S is in a large amount of debt but to put that comically huge number (19 Trillion) into perspective with data of things people have tied a sense of value too. We want to convince viewers that the debt is not just a huge number but there are tangible and great things that can be done with this money which is our focus on the latter half on social welfare programs and government fundings. Our hope is that by the time the viewer gets down to the bottom of the visualization, they will appreciate the sheer magnitude of the U.S. debt. All of the items previous to the debt get progressively larger, but are still relatable until the prices of the goods become unwieldy. While the general American public is aware of the debt, we wanted to put into perspective for viewers how dire and shocking of an issue this debt has become.
+
+## License
+
+MIT © [Kevin Schaich](https://kevinschaich.io)
